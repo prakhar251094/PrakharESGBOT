@@ -1,0 +1,32 @@
+import streamlit as st
+import pandas as pd
+
+def run_cbam_module():
+    st.header("🏭 CBAM Impact Calculator")
+    st.write("Estimate CBAM costs for Indian exporters under EU carbon border tax.")
+
+    # Sample data (can be replaced with CSV or API data)
+    data = {
+        'Company': ['Tata Steel', 'JSW Steel', 'Adani Cement', 'Vedanta Aluminium'],
+        'EU Exports (tons)': [200000, 150000, 120000, 100000],
+        'Emission Intensity (tCO2e/ton)': [2.1, 2.4, 0.8, 1.9]
+    }
+    df = pd.DataFrame(data)
+
+    st.markdown("### 🔍 Company-wise Emission Data")
+    st.dataframe(df)
+
+    # User input
+    carbon_price = st.slider("💶 EU Carbon Price (€/tCO2e)", min_value=50, max_value=120, value=90)
+    selected_company = st.selectbox("🏢 Select Company", df['Company'])
+
+    if selected_company:
+        row = df[df['Company'] == selected_company].iloc[0]
+        cbam_cost = row['EU Exports (tons)'] * row['Emission Intensity (tCO2e/ton)'] * carbon_price
+        st.success(f"💸 Estimated CBAM Payment for **{selected_company}**: **€{cbam_cost:,.2f}**")
+
+        # Optional: Add INR equivalent
+        euro_to_inr = st.number_input("💱 Euro to INR Rate", value=90.0)
+        st.write(f"🇮🇳 Equivalent in INR: ₹{cbam_cost * euro_to_inr:,.2f}")
+
+   
