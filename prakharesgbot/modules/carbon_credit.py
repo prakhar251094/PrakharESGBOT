@@ -1,19 +1,18 @@
-import streamlit as st
+from prakharesgbot.carbon_credit import carbon_credit_analysis
+description = st.text_input("Brief Project Description", "Bamboo agroforestry in Bihar")
+area = st.number_input("Project Area (in hectares)", min_value=1, value=1000)
+years = st.number_input("Project Duration (years)", min_value=1, value=10)
 
-def run_carbon_module():
-    st.header("🌳 Carbon Credit Estimator")
-    st.write("Estimate carbon credit yield from reforestation / REDD+ projects")
-
-    area = st.number_input("Project Area (in hectares)", min_value=1, value=1000)
-    years = st.number_input("Project Duration (years)", min_value=1, value=10)
-    methodology = st.selectbox("Methodology", ["REDD+", "Afforestation", "Agroforestry"])
+if st.button("Run Carbon Credit Analysis"):
+    result = carbon_credit_analysis(description, area, years)
     
-    if methodology == "REDD+":
-        credits_per_hectare = 8
-    elif methodology == "Afforestation":
-        credits_per_hectare = 12
-    else:
-        credits_per_hectare = 6
-
-    total_credits = area * credits_per_hectare * (years / 10)
-    st.success(f"Estimated Carbon Credits: {total_credits:,.0f} tCO₂e")
+    st.markdown("### 🧾 Analysis Result")
+    st.write(f"**Project Type:** {result['Project Type']}")
+    st.write(f"**Estimated Credits:** {result['Estimated Credits (tCO2e)']:.0f} tCO₂e")
+    st.write(f"**Potential Revenue:** ${result['Potential Revenue (USD)']:.2f}")
+    st.write("**Registry Info:**", result['Registry Info'])
+    
+    st.markdown("### ✅ MRV Checklist")
+    for k, v in result["MRV Checklist"].items():
+        st.write(f"- {k}: {'✅' if v else '❌'}")
+price = st.slider("Carbon Price per ton (USD)", min_value=1, max_value=100, value=10)
