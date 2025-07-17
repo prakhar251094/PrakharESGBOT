@@ -2,6 +2,12 @@ from prakharesgbot.carbon_credit import carbon_credit_analysis
 description = st.text_input("Brief Project Description", "Bamboo agroforestry in Bihar")
 area = st.number_input("Project Area (in hectares)", min_value=1, value=1000)
 years = st.number_input("Project Duration (years)", min_value=1, value=10)
+price = st.slider(
+    "Carbon Price per ton (USD)", min_value=1, max_value=100, value=10
+)
+
+if st.button("Run Carbon Credit Analysis"):
+    result = carbon_credit_analysis(description, area, years, carbon_price=price)
 
 if st.button("Run Carbon Credit Analysis"):
     result = carbon_credit_analysis(description, area, years, carbon_price=price)
