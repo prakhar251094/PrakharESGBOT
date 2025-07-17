@@ -4,7 +4,7 @@ area = st.number_input("Project Area (in hectares)", min_value=1, value=1000)
 years = st.number_input("Project Duration (years)", min_value=1, value=10)
 
 if st.button("Run Carbon Credit Analysis"):
-    result = carbon_credit_analysis(description, area, years)
+    result = carbon_credit_analysis(description, area, years, carbon_price=price)
     
     st.markdown("### 🧾 Analysis Result")
     st.write(f"**Project Type:** {result['Project Type']}")
