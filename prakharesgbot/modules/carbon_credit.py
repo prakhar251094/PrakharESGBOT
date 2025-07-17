@@ -8,10 +8,6 @@ price = st.slider(
 
 if st.button("Run Carbon Credit Analysis"):
     result = carbon_credit_analysis(description, area, years, carbon_price=price)
-
-if st.button("Run Carbon Credit Analysis"):
-    result = carbon_credit_analysis(description, area, years, carbon_price=price)
-    
     st.markdown("### 🧾 Analysis Result")
     st.write(f"**Project Type:** {result['Project Type']}")
     st.write(f"**Estimated Credits:** {result['Estimated Credits (tCO2e)']:.0f} tCO₂e")
