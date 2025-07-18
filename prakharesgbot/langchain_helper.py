@@ -1,12 +1,20 @@
-def load_pdf_qa_chain(openai_api_key):
-    import streamlit as st
-    import random
-    from PyPDF2 import PdfReader
-    from langchain.text_splitter import CharacterTextSplitter
-    from langchain.embeddings import OpenAIEmbeddings
-    from langchain.vectorstores import FAISS
-    from langchain.chains import RetrievalQA
-    from langchain.chat_models import ChatOpenAI
+import os
+import streamlit as st
+import random
+from dotenv import load_dotenv
+from PyPDF2 import PdfReader
+from langchain.text_splitter import CharacterTextSplitter
+from langchain.embeddings import OpenAIEmbeddings
+from langchain.vectorstores import FAISS
+from langchain.chains import RetrievalQA
+from langchain.chat_models import ChatOpenAI
+
+def load_pdf_qa_chain():
+    load_dotenv()
+    openai_api_key = os.getenv("OPENAI_API_KEY")
+    if not openai_api_key:
+        st.error("🔑 OpenAI API key not found. Please set it with `.env` or in Streamlit Secrets.")
+        return
 
     st.header("📚 Ask Questions from Uploaded ESG Frameworks")
     uploaded_files = st.file_uploader("Upload ESG PDFs", type=["pdf"], accept_multiple_files=True)
@@ -25,8 +33,14 @@ def load_pdf_qa_chain(openai_api_key):
         embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
         vectorstore = FAISS.from_texts(chunks, embedding=embeddings)
 
-        llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0, openai_api_key=openai_api_key)
-        qa = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=vectorstore.as_retriever())
+        # 🧠 Instantiate the LLM here
+        llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo", openai_api_key=openai_api_key)
+
+        qa = RetrievalQA.from_chain_type(
+            llm=llm,
+            chain_type="stuff",
+            retriever=vectorstore.as_retriever()
+        )
 
         query = st.text_input("Ask your ESG question")
         if query:
