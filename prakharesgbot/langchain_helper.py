@@ -1,15 +1,13 @@
-from PyPDF2 import PdfReader
-from langchain.text_splitter import CharacterTextSplitter
-from langchain.embeddings import OpenAIEmbeddings
-from langchain.vectorstores import FAISS
-from langchain.chains import RetrievalQA
-from langchain.chat_models import ChatOpenAI
-import streamlit as st
-import os
-import random
+def load_pdf_qa_chain(openai_api_key):
+    import streamlit as st
+    import random
+    from PyPDF2 import PdfReader
+    from langchain.text_splitter import CharacterTextSplitter
+    from langchain.embeddings import OpenAIEmbeddings
+    from langchain.vectorstores import FAISS
+    from langchain.chains import RetrievalQA
+    from langchain.chat_models import ChatOpenAI
 
-def load_pdf_qa_chain():
-    openai_api_key = os.getenv("OPENAI_API_KEY")
     st.header("📚 Ask Questions from Uploaded ESG Frameworks")
     uploaded_files = st.file_uploader("Upload ESG PDFs", type=["pdf"], accept_multiple_files=True)
     wisdom = st.checkbox("Enable Wisdom Mode 🌱")
